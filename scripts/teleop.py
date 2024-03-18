@@ -11,13 +11,17 @@ class TeleopNode:
         rospy.init_node('teleop_node', anonymous=True)
         self.motor_handler = MotorHandler([17], [27], GPIOHandler(mock_mode=True))
 
-        self.subscriber = rospy.Subscriber("/turtle1/cmd_vel", Twist, self.cmd_vel_callback)
+        self.subscriber = rospy.Subscriber("/cmd_vel", Twist, self.cmd_vel_callback)
 
 
     def cmd_vel_callback(self, data):
         # Преобразование сообщения Twist в команды для MotorHandler
-        linear_speed = data.linear.x * SCALE_FACTOR
-        angular_speed = data.angular.z * SCALE_FACTOR
+        linear_speed = data.linear.x
+        angular_speed = data.angular.z
+        
+        print("Received cmd_vel message:")
+        print("Linear Components: [x: %s, y: %s, z: %s]" % (data.linear.x, data.linear.y, data.linear.z))
+        print("Angular Components: [x: %s, y: %s, z: %s]" % (data.angular.x, data.angular.y, data.angular.z))
 
         # Примерная логика управления
         if linear_speed > 0:
